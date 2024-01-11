@@ -1,17 +1,15 @@
 import { useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Routes from "./Routes/index";
+import { AuthProvider } from "./provider/AuthProvider";
+import "./assets/css/App.css";
 
 function App() {
-  const [signup, setSignUp] = useState(true);
   return (
-    <>
-      {signup ? (
-        <Signup setSignUp={setSignUp} />
-      ) : (
-        <Login setSignUp={setSignUp} />
-      )}
-    </>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

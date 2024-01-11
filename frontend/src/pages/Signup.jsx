@@ -1,54 +1,125 @@
-import { useReducer, useState } from "react";
-import reducer from "../reducer/sharedReducer";
+import { useState } from "react";
 import validator from "validator";
+import { useNavigate } from "react-router-dom";
+import { signUp } from "../services/Auth.service";
+import {
+  Button,
+  Container,
+  Input,
+  InputLabel,
+  Typography,
+} from "@mui/material";
 
-const Signup = ({ setSignUp }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    userName: "",
-    email: "",
-    password: "",
+const Signup = () => {
+  const [userName, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState({
+    userName: false,
+    email: false,
+    password: false,
   });
 
-  const [error, setError] = useState({});
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError({
-      userName: !validator.isLength(state.userName, { min: 4, max: 10 }),
-      email: !validator.isEmail(state.email),
-      password: !validator.isLength(state.password, { min: 6 }),
+  function handleUserNameChange(e) {
+    setUsername(e.target.value);
+    setError((prev) => {
+      return {
+        ...prev,
+        userName: validator.isLength(userName, { min: 4, max: 10 }),
+      };
     });
-  };
+  }
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+    setError((prev) => ({ ...prev, email: validator.isEmail(email) }));
+  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    dispatch({ type: name.toUpperCase(), payload: value });
-  };
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+    setError((prev) => ({
+      ...prev,
+      password: validator.isLength(password, { min: 6 }),
+    }));
+  }
+
   return (
     <>
-      <div>
-        <h1>SignUp</h1>
-        <form
-          style={{ display: "flex", flexDirection: "column", width: "50%" }}
-          onSubmit={handleSubmit}
-        >
-          <label htmlFor="UserName">Username:</label>
-          <input onChange={handleChange} name="userName" type="text" />
-          {error.userName && (
-            <span>UserName length must be from 4 to 10 character</span>
-          )}
-          <label htmlFor="Email">Email</label>
-          <input type="email" name="email" onChange={handleChange} />
-          {error.email && <span>Check your Email Again</span>}
-          <label htmlFor="password">Password:</label>
-          <input onChange={handleChange} type="password" name="password" />
-          {error.password && (
-            <span>Password Length must be min of 6 character</span>
-          )}
-          <button type="submit">SignUp</button>
-        </form>
-      </div>
-      <button onClick={() => setSignUp(false)}>Login</button>
+      <Container
+        sx={{ backgroundColor: "#f5f5dc", margin: "auto", minHeight: "100vh" }}
+        maxWidth="false"
+      >
+        <div>
+          <h1>SignUp</h1>
+          <form
+            style={{ display: "flex", flexDirection: "column", width: "50%" }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              try {
+                signUp({ userName, email, password }).then((res) => {
+                  alert(res.data.message);
+                  console.log(res.data.message, res.status);
+                  if (res.status == 200) {
+                    navigate("/login");
+                  }
+                });
+              } catch (error) {
+                console.log(error, "Error while calling SignUp Fucntion");
+              }
+              setUsername("");
+              setEmail("");
+              setPassword("");
+            }}
+          >
+            <InputLabel htmlFor="userName">Username:</InputLabel>
+            {!error.userName && userName && (
+              <Typography color={"red"}>InValid</Typography>
+            )}
+            <Input
+              autoFocus={true}
+              onChange={handleUserNameChange}
+              error={!error.userName}
+              name="userName"
+              type="text"
+            />
+
+            <InputLabel htmlFor="Email">Email</InputLabel>
+            {!error.email && email && (
+              <Typography color={"red"}>Invalid Email</Typography>
+            )}
+            <Input
+              type="email"
+              name="email"
+              onChange={handleEmailChange}
+              error={!error.email}
+            />
+            <InputLabel htmlFor="password">Password:</InputLabel>
+            {!error.password && password && (
+              <Typography color={"red"}>
+                Password Length must be min of 6 character
+              </Typography>
+            )}
+            <Input
+              onChange={handlePasswordChange}
+              type="password"
+              name="password"
+              error={!error.password}
+            />
+            <Button
+              disabled={!error.userName || !error.email || !error.password}
+              variant="contained"
+              type="submit"
+            >
+              SignUp
+            </Button>
+          </form>
+        </div>
+        {/* {response.status != 200 && <Typography>{response}</Typography>} */}
+        <Button variant="contained" onClick={() => navigate("/login")}>
+          Login
+        </Button>
+      </Container>
     </>
   );
 };

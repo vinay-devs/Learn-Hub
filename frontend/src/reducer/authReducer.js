@@ -1,12 +1,12 @@
-import { login, addToken, getToken, signup } from "../services/Auth.service";
+// import login from "../services/Auth.service";
 
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case "LOGIN":
+//       return login(action.payload.userData).then((res) => (state.res = res));
+//     case "SIGNUP":
+//       return signup(action.payload.userData);
+//   }
+// };
 
-const reducer=(state,action)=>{
-    switch(action.type){
-         case "LOGIN":
-            return {
-                login(action.payload)
-            }
-    }
-
-}
+// export default reducer;

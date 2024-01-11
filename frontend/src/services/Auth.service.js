@@ -1,26 +1,47 @@
-import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+const baseURL = "http://localhost:5500";
 
-const [token, setToken] = useState;
+const navigateFn = () => {
+  const navigate = useNavigate();
+  return navigate;
+};
 
 const addToken = (token) => {
-  setToken(token);
-  localStorage.setItem("user", token);
+  return localStorage.setItem("user", token);
 };
 
 const getToken = () => {
-  localStorage.getItem("user");
+  return localStorage.getItem("user");
 };
 
 const signUp = (credential) => {
-  axios.post("/signup", { credential }).then((res) => addToken(res));
+  return axios
+    .post(baseURL + "/user/signup", { credential })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => err.response);
 };
 
-const login = (credential) => {
-  axios.post(
-    "/login",
-    { credential }.then((res) => addToken(res))
-  );
+const login = (credential, isAdmin) => {
+  if (isAdmin) {
+    return axios.post(baseURL + "/admin/login", { credential }).then((res) => {
+      console.log(res);
+      addToken(res);
+    });
+  } else {
+    return axios.post(baseURL + "/user/login", { credential }).then((res) => {
+      if (res.status == 200) {
+        addToken(res.data.token);
+        return res.status;
+      } else {
+        return "Status is not 200";
+      }
+    });
+  }
 };
 
-export default { addToken, getToken, signUp, login };
+export default { addToken, getToken };
+export { signUp, login };
