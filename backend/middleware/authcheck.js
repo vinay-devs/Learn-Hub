@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "secret";
 const bcrypt = require("bcrypt");
 const { User } = require("../db");
 
@@ -7,7 +6,7 @@ const authCheck = async (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
     try {
-      const checkResult = jwt.verify(token, JWT_SECRET);
+      const checkResult = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await User.findOne({ userName: checkResult.username });
       const passwordCheck = await bcrypt.compare(
         checkResult.password,

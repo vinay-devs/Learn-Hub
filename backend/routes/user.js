@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userMiddleware = require("../middleware/user");
 const authCheck = require("../middleware/authcheck");
-const JWT_SECRET = "secret";
 
 const usernameSchema = zod.string().min(4).max(10);
 const passwordSchema = zod.string().min(6);
@@ -59,7 +58,7 @@ router.post("/login", userMiddleware, async (req, res) => {
   }
 
   try {
-    const token = jwt.sign({ username, password }, JWT_SECRET);
+    const token = jwt.sign({ username, password }, process.env.JWT_SECRET_KEY);
     res
       .status(200)
       .json({ message: "Data processed successfully", token: token });

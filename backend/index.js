@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -11,6 +12,7 @@ app.use(cors());
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 
+console.log(process.env.JWT_SECRET_KEY);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

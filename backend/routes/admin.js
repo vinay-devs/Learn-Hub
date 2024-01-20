@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const adminMiddleWare = require("../middleware/admin");
-const JWT_SECRET = "secret";
+
 const jwt = require("jsonwebtoken");
 const { adminAuthCheck } = require("../middleware/adminAuthCheck");
 const { User, Course } = require("../db");
@@ -10,7 +10,7 @@ router.post("/login", adminMiddleWare, (req, res) => {
   const { username, password } = req.body.credential;
 
   try {
-    const token = jwt.sign({ username, password }, JWT_SECRET);
+    const token = jwt.sign({ username, password }, process.env.JWT_SECRET_KEY);
     res.status(200).json({
       message: "Data processed successfully",
       token: token,

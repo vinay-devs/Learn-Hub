@@ -1,10 +1,9 @@
-const JWT_SECRET = "secret";
 const jwt = require("jsonwebtoken");
 
 const adminAuthCheck = (req, res, next) => {
   const token = req.headers.authorization;
   try {
-    const checkResult = jwt.verify(token, JWT_SECRET);
+    const checkResult = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (checkResult.username == "admin" && checkResult.password == "admin") {
       next();
     } else {

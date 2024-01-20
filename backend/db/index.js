@@ -1,20 +1,12 @@
 const mongoose = require("mongoose");
 
-try {
-  mongoose
-    .connect(
-      "mongodb+srv://vinaydevs:jqF-phGAETG_W6F@cluster0.rdf1mnc.mongodb.net/CourseSellingWeb"
-    )
-    .then((res, err) => {
-      if (!err) {
-        console.log("connected to db");
-      } else {
-        console.log(res);
-      }
-    });
-} catch (error) {
-  console.log("Error while Connecting To Database");
-}
+mongoose.connect(process.env.MONGODB_URL).then((res, err) => {
+  if (!err) {
+    console.log("connected to db");
+  } else {
+    console.log(res);
+  }
+});
 
 const userSchema = new mongoose.Schema({
   userName: String,
