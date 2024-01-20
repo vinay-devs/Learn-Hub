@@ -4,8 +4,9 @@ import Menu from "@mui/material/Menu";
 import { Avatar, Box, Container, MenuItem, Typography } from "@mui/material";
 import "../assets/css/appbardashboard.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AppBarDashBoard = () => {
+const AppBarDashBoard = ({ userData }) => {
   const [_, setToken] = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -40,7 +41,7 @@ const AppBarDashBoard = () => {
             aria-expanded={openMenu ? "true" : undefined}
             onClick={handleMenuClick}
           ></Avatar>
-          <Typography>Vinay</Typography>
+          <Typography>{userData.username}</Typography>
           <Menu
             anchorEl={anchorEl}
             id="basic-menu"
@@ -50,10 +51,10 @@ const AppBarDashBoard = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem>My Profile</MenuItem>
             <MenuItem
               onClick={() => {
                 setToken("");
+                toast.success("Successfully LoggedOut");
                 navigate("/login");
               }}
             >

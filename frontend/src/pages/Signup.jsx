@@ -9,6 +9,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [userName, setUsername] = useState("");
@@ -58,14 +59,13 @@ const Signup = () => {
               e.preventDefault();
               try {
                 signUp({ userName, email, password }).then((res) => {
-                  alert(res.data.message);
-                  console.log(res.data.message, res.status);
                   if (res.status == 200) {
+                    toast.success(res.data.message);
                     navigate("/login");
                   }
                 });
               } catch (error) {
-                console.log(error, "Error while calling SignUp Fucntion");
+                toast.error("Error while calling SignUp Function");
               }
               setUsername("");
               setEmail("");

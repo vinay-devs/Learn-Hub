@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/Auth.service";
 import axios from "axios";
@@ -14,30 +14,42 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
+import { useAuth } from "../provider/AuthProvider";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const [token, setToken] = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState({});
   const [checkedAdmin, setCheckedAdmin] = useState(false);
 
-  // const login = async (credential) => {
-  //   return axios.post("/login", { credential }).then((res) => {
-  //     return setResponse(res);
-  //   });
-  // };
   const errUsername = validator.isLength(username, { min: 4, max: 10 });
   function handleUserInputChange(e) {
     setUsername((prev) => e.target.value);
   }
 
+  useEffect(() => {
+    if (token && !response.admin) {
+      navigate("/dashboard");
+    }
+    if (token && response.admin) {
+      navigate("/admin/dashboard");
+    }
+  }, [token]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const credential = { username: username, password: password };
-    const resStatus = await login(credential, checkedAdmin);
-    if (resStatus == 200) {
-      navigate("/dashboard");
+    const { token, isAdmin } = await login(credential, checkedAdmin);
+    if (token) {
+      setToken(token);
+      setResponse({ admin: isAdmin });
+      if (isAdmin) {
+        toast.success("Succesfully Logged In As Admin");
+      } else {
+        toast.success("Successfully Logged In");
+      }
     }
   };
 

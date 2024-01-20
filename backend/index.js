@@ -11,14 +11,6 @@ app.use(cors());
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.post("/login", (req) => {
-  console.log(req);
-});
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

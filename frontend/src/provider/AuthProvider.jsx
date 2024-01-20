@@ -10,7 +10,6 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (tokenValue) {
       axios.defaults.headers.common["Authorization"] = tokenValue;
-      console.log(axios.defaults.headers.common["Authorization"]);
       localStorage.setItem("user", tokenValue);
     } else {
       delete axios.defaults.headers.common["Authorization"];

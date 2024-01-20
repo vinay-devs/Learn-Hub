@@ -68,7 +68,73 @@ router.post("/login", userMiddleware, async (req, res) => {
   }
 });
 
-router.get("/dashboard", authCheck, (req, res) => {
-  console.log("hey");
+router.get("/userdata", authCheck, async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const userData = jwt.decode(token);
+    const user = await User.findOne({ userName: userData.username });
+    res.status(200).json({
+      username: user.userName,
+      email: user.email,
+      purchasedCourse: user.purchasedCourse,
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+router.get("/allCourses", authCheck, async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.status(200).json(courses);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+router.post("/addToPurchased", authCheck, async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const { username } = jwt.decode(token);
+    const { id } = req.body;
+    const userData = await User.findOne({ userName: username });
+
+    if (userData.purchasedCourse.includes(id)) {
+      return res
+        .status(400)
+        .json({ message: "You have already Bought the Course" });
+    }
+
+    await User.updateOne(
+      { userName: username },
+      {
+        $push: { purchasedCourse: id },
+      }
+    );
+    res.status(200).json({ message: "Successfully Bought the Course" });
+  } catch (err) {
+    res.json(err);
+  }
+});
+
+router.get("/getCourseData", authCheck, async (req, res) => {
+  try {
+    const purchasedData = req.query.purchasedData;
+    const course = await Course.find({ _id: { $in: purchasedData } });
+    res.status(200).json(course);
+  } catch (err) {
+    res.status(400).json({ message: "Error while Taking Data From Database" });
+  }
+});
+
+router.delete("/deleteCourse/:id", authCheck, async (req, res) => {
+  const token = req.headers.authorization;
+  const { username } = jwt.decode(token);
+  const id = req.params.id;
+  await User.updateOne(
+    { userName: username },
+    { $pull: { purchasedCourse: id } }
+  );
+  res.status(200).json({ message: "Successfully Deleted" });
 });
 module.exports = router;

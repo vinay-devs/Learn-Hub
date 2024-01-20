@@ -5,9 +5,12 @@ import ProtectedPages from "./ProtectedPages";
 import Login from "../pages/Login";
 import { useAuth } from "../provider/AuthProvider";
 import Home from "../pages/Home";
+import DashBoardAdmin from "../pages/DashBoardAdmin";
+import { Navigate } from "react-router-dom";
 
 const Routes = () => {
   const [token, _] = useAuth();
+
   const routesForAuthenticated = [
     {
       path: "/",
@@ -16,6 +19,10 @@ const Routes = () => {
         {
           path: "/dashboard",
           element: <DashBoard />,
+        },
+        {
+          path: "/admin/dashboard",
+          element: <DashBoardAdmin />,
         },
       ],
     },
@@ -38,7 +45,9 @@ const Routes = () => {
   ];
   const router = createBrowserRouter([
     ...routesForPublic,
+    // ...routesForAuthenticated,
     ...(token ? routesForAuthenticated : []),
+    { path: "*", element: <Navigate to={"/login"} /> },
   ]);
 
   return <RouterProvider router={router} />;
