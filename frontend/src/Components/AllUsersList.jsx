@@ -54,7 +54,7 @@ const AllUsersList = ({ value }) => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 2,
+                pageSize: 10,
               },
             },
           }}
