@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: "https://learn-hub-client.vercel.app",
-    methods: ["POST", "GET"],
+    methods: ["POST", "GET", "DELETE"],
     credentials: true,
   })
 );
