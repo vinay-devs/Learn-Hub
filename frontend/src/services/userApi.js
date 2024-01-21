@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASEURL = "http://localhost:5500/user";
+const BASEURL = "https://learn-hub-weld.vercel.app/user";
 const getUserData = async (token) => {
   try {
     const data = await axios.get(BASEURL + "/userdata", {
