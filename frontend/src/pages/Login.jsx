@@ -67,7 +67,6 @@ const Login = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            height: "40%",
             margin: "auto",
             width: "40%",
             border: "2px solid black",

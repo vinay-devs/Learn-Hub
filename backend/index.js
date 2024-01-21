@@ -8,7 +8,11 @@ const adminRouter = require("./routes/admin");
 const userRouter = require("./routes/user");
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://learn-hub-client.vercel.app/login",
+  })
+);
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 
