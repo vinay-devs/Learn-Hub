@@ -20,7 +20,7 @@ router.post("/signup", async (req, res) => {
       emailSchema.parse(email);
       passwordSchema.parse(password);
     } catch (error) {
-      res.status(400).json({ message: "Invalid input data" });
+      return res.status(400).json({ message: "Invalid input data" });
     }
 
     try {
@@ -32,19 +32,21 @@ router.post("/signup", async (req, res) => {
               email: email,
               password: hash,
             });
-            res.status(200).json({ message: "Successfully SignUp" });
+            return res.status(200).json({ message: "Successfully SignUp" });
           }
         });
       } else {
-        res
+        return res
           .status(400)
           .json({ message: "Email Id is already Exists . Please Login" });
       }
     } catch (error) {
-      res.status(400).json({ message: "Error while Hashing the Password" });
+      return res
+        .status(400)
+        .json({ message: "Error while Hashing the Password" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Error with database Uploading" });
+    return res.status(400).json({ message: "Error with database Uploading" });
   }
 });
 

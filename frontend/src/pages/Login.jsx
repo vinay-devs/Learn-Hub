@@ -9,7 +9,7 @@ import {
   Container,
   FormControlLabel,
   FormGroup,
-  Input,
+  TextField,
   InputLabel,
   Switch,
   Typography,
@@ -39,7 +39,6 @@ const Login = () => {
     }
   }, [token]);
   const handleSubmit = async (e) => {
-    e.preventDefault();
     const credential = { username: username, password: password };
     const { token, isAdmin } = await login(credential, checkedAdmin);
     if (token) {
@@ -56,69 +55,92 @@ const Login = () => {
   return (
     <>
       <Container
-        sx={{ backgroundColor: "#f5f5dc", margin: 0, minHeight: "100vh" }}
+        sx={{
+          backgroundColor: "#f5f5dc",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+        }}
         maxWidth="false"
       >
-        <Box component={"div"} sx={{ display: "flex", columnGap: "80px" }}>
-          <Typography variant="h1" fontSize="34px">
-            Login
-          </Typography>
-          <FormGroup>
-            <FormControlLabel
-              label="Admin"
-              control={
-                <Switch
-                  checked={checkedAdmin}
-                  onChange={() => {
-                    setCheckedAdmin((prev) => (prev ? false : true));
-                    setUsername((prev) => "");
-                    setPassword((prev) => "");
-                  }}
-                />
-              }
-            />
-          </FormGroup>
-        </Box>
-        <form
-          style={{
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "column",
-            width: "50%",
-            rowGap: "10px",
+            height: "40%",
+            margin: "auto",
+            width: "40%",
+            border: "2px solid black",
+            borderRadius: "10px",
           }}
-          onSubmit={handleSubmit}
         >
-          <InputLabel required htmlFor="username">
-            UserName
-          </InputLabel>
+          <Box
+            component={"div"}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "20px",
+              padding: "15px",
+            }}
+          >
+            <Typography
+              textAlign={"center"}
+              variant="h1"
+              fontWeight={"bold"}
+              fontSize="34px"
+            >
+              Login
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                label="Admin"
+                control={
+                  <Switch
+                    checked={checkedAdmin}
+                    onChange={() => {
+                      setCheckedAdmin((prev) => (prev ? false : true));
+                      setUsername("");
+                      setPassword("");
+                    }}
+                  />
+                }
+              />
+            </FormGroup>
 
-          <Typography color={"red"}>
-            {!errUsername && username && "InValid"}
-          </Typography>
-          <Input
-            value={username}
-            onChange={handleUserInputChange}
-            type="text"
-            error={!errUsername}
-            autoFocus={true}
-            name="userName"
-          />
-          <InputLabel required htmlFor="password">
-            Password
-          </InputLabel>
-          <Input
-            value={password}
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            name="password"
-          />
-          <Button disabled={!errUsername} variant="contained" type="submit">
-            Login
-          </Button>
-        </form>
-        <Button variant="contained" onClick={() => navigate("/signup")}>
-          SignUp
-        </Button>
+            <TextField
+              value={username}
+              label={"UserName"}
+              onChange={handleUserInputChange}
+              type="text"
+              size="small"
+              error={!errUsername}
+              autoFocus={true}
+              name="userName"
+            />
+            <TextField
+              value={password}
+              label={"Password"}
+              type="password"
+              size="small"
+              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+            />
+            <Button
+              disabled={!errUsername}
+              variant="contained"
+              onClick={handleSubmit}
+            >
+              Login
+            </Button>
+            <Button
+              sx={{ margin: "auto", width: "min-content" }}
+              variant="contained"
+              onClick={() => navigate("/signup")}
+            >
+              SignUp
+            </Button>
+          </Box>
+        </Box>
       </Container>
     </>
   );
