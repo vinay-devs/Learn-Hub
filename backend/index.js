@@ -16,7 +16,6 @@ app.use(
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 
-console.log(process.env.JWT_SECRET_KEY);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = "http://localhost:5500";
+const baseURL = "https://learn-hub-weld.vercel.app/";
 
 const addToken = (token) => {
   return localStorage.setItem("user", token);
